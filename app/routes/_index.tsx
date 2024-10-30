@@ -1,4 +1,14 @@
+import { json, useLoaderData, redirect } from "@remix-run/react"
+import type { LoaderFunctionArgs } from "@remix-run/node";
 import type { MetaFunction } from "@remix-run/node";
+
+
+export const loader = async (args: LoaderFunctionArgs) => {
+
+  return redirect("/home");
+};
+
+
 
 export const meta: MetaFunction = () => {
   return [

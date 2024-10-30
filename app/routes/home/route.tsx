@@ -5,13 +5,13 @@ import { getPageData } from './data/data-fetchers.server';
 import { useLoaderData } from '@remix-run/react';
 
 export const loader = async (args: LoaderFunctionArgs) => {
-  await handleAuth(args.request);
+  await handleAuth(args);
   const pageData = await getPageData();
   return json({ ...pageData });
 };
 
 export const action = async (args: ActionFunctionArgs) => {
-  handleAuth(args.request);
+  handleAuth(args);
   return null;
 };
 

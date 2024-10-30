@@ -1,5 +1,19 @@
+import { LoaderFunctionArgs, redirect } from "@remix-run/node";
+import { requireAuth } from "~/lib/auth/user-auth.server";
+import { checkRegistrationStatus } from "~/lib/business-logic/check-registration-status.server";
 
-export const handleAuth = async (request: Request) => {
+export const handleAuth = async (args: LoaderFunctionArgs) => {
+  const { userId} = await requireAuth(args);
+
+  const authState = await checkRegistrationStatus(userId);
+
+  if(authState !== "registered"){
+    throw redirect("/register");
+  }
 
 
+  return {
+    userId,
+    authState,
+  };
 };

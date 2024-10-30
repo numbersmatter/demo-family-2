@@ -2,11 +2,15 @@ import { LoaderFunctionArgs, redirect } from "@remix-run/node";
 import { destroySession, getSession } from "./sessions.server";
 import {
   checkSessionCookie,
-  getFirebaseUser,
 } from "../firebase/auth/auth.server";
 import { getServerEnv } from "../env-variables.server";
+import { getUserDetails } from "./testing-user.server";
 
 const { SIGN_IN_PATH } = getServerEnv();
+
+export type AuthStates = "logged-out" | "authenticated" | "registered";
+
+export type AppUserId = string | null;
 
 const checkAuth = async (args: LoaderFunctionArgs) => {
   // firebase auth setup
@@ -21,20 +25,21 @@ const checkAuth = async (args: LoaderFunctionArgs) => {
 };
 
 const requireAuth = async (args: LoaderFunctionArgs) => {
-  const session = await getSession(args.request.headers.get("cookie"));
-  const { uid } = await checkSessionCookie(session);
-  if (!uid) {
-    throw redirect(SIGN_IN_PATH, {
-      headers: { "Set-Cookie": await destroySession(session) },
-    });
-  }
+  const {userId, email} = await getUserDetails(args);
 
-  const user = await getFirebaseUser(uid);
+  if(!userId){
+    throw redirect(SIGN_IN_PATH);
+  }
+ 
+
+  
 
   return {
-    uid,
-    user,
+    userId,    
   };
 };
+
+
+
 
 export { checkAuth, requireAuth };
