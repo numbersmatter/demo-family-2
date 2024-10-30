@@ -5,11 +5,11 @@ import {
   QueryDocumentSnapshot,
   Timestamp,
 } from "firebase-admin/firestore";
-import { CreateEvent, EventAppModel, EventDbModel } from "./event-types";
+import * as m from "./event-types";
 import { firestoreDb } from "~/lib/firebase/firestore.server";
 
-const firestoreConverter: FirestoreDataConverter<EventAppModel> = {
-  toFirestore: (event: EventAppModel) => {
+const firestoreConverter: FirestoreDataConverter<m.EventAppModel> = {
+  toFirestore: (event: m.EventAppModel) => {
     return {
       eventDate: Timestamp.fromDate(event.eventDate),
       createdDate: Timestamp.fromDate(event.createdDate),
@@ -24,7 +24,7 @@ const firestoreConverter: FirestoreDataConverter<EventAppModel> = {
       message: event.message,
     };
   },
-  fromFirestore: (snapshot: QueryDocumentSnapshot<EventDbModel>) => {
+  fromFirestore: (snapshot: QueryDocumentSnapshot<m.EventDbModel>) => {
     return {
       id: snapshot.id,
       name: snapshot.data().name,
@@ -60,7 +60,7 @@ export const eventsDb = () => {
     return doc;
   };
 
-  const create = async (eventData: CreateEvent) => {
+  const create = async (eventData: m.CreateEvent) => {
     const eventDocRef = writeCollection.doc();
     const createData = {
       ...eventData,
@@ -102,7 +102,7 @@ export const eventsDb = () => {
     data,
   }: {
     id: string;
-    data: Partial<EventDbModel>;
+    data: Partial<m.EventDbModel>;
   }) => {
     const updateData = {
       ...data,
@@ -112,11 +112,24 @@ export const eventsDb = () => {
     return await docRef.update(updateData);
   };
 
+  const listByStages = async ({
+    stages,
+  }: {
+    stages: m.EventStage[];
+  }) => {
+    const querySnapshot = await eventsCollection
+      .where("stage", "in", stages)
+      .get();
+    const events = querySnapshot.docs.map((doc) => doc.data());
+    return events;
+  };
+
   return {
     read,
     list,
     listOpen,
     create,
     update,
+    listByStages,
   };
 };

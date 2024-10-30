@@ -35,7 +35,8 @@ const requireAuth = async (args: LoaderFunctionArgs) => {
   
 
   return {
-    userId,    
+    userId,
+    email,    
   };
 };
 

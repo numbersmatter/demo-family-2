@@ -174,6 +174,22 @@ export const reservationsDb = () => {
     return await readReservationCollection.doc(id).update(updateData);
   };
 
+  const checkUserReservations = async ({
+    userId,
+    eventIdArray,
+  }: {
+    userId: string;
+    eventIdArray: string[];
+  }) => {
+    const querySnapshot = await readReservationCollection
+      .where("userId", "==", userId)
+      .where("eventId", "in", eventIdArray)
+      .get();
+    const docs = querySnapshot.docs.map((doc) => doc.data());
+
+    return docs;
+  };
+
   return {
     read,
     list,
@@ -181,6 +197,7 @@ export const reservationsDb = () => {
     checkReservation,
     listByEvent,
     update,
+    checkUserReservations,
     // listOpen,
   };
 };
