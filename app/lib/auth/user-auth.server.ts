@@ -5,6 +5,7 @@ import {
 } from "../firebase/auth/auth.server";
 import { getServerEnv } from "../env-variables.server";
 import { getUserDetails } from "./testing-user.server";
+import { checkRegistrationStatus } from "../business-logic/check-registration-status.server";
 
 const { SIGN_IN_PATH } = getServerEnv();
 
@@ -31,12 +32,14 @@ const requireAuth = async (args: LoaderFunctionArgs) => {
     throw redirect(SIGN_IN_PATH);
   }
  
+  const authState = await checkRegistrationStatus(userId);
 
   
 
   return {
     userId,
     email,    
+    authState,
   };
 };
 
