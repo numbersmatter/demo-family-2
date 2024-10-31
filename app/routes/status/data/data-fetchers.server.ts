@@ -13,7 +13,6 @@ const getApplicateData = async ({ userId }: { userId: string }) => {
   }
 
   const applicationDate = applicationDoc.createdDate
-    .toDate()
     .toLocaleDateString();
 
   const applicationStatus = applicationDoc.status;
