@@ -1,3 +1,4 @@
+import { MetaFunction } from "@remix-run/react";
 import { isRouteErrorResponse, json, useLoaderData, useRouteError } from "@remix-run/react"
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import {
@@ -8,9 +9,14 @@ import {
   ScrollRestoration,
 } from "@remix-run/react";
 import type { LinksFunction } from "@remix-run/node";
+import { rootAuthLoader } from "@clerk/remix/ssr.server";
+import { ClerkApp } from "@clerk/remix";
 
 import "./tailwind.css";
-import { getClientEnv } from "./lib/env-variables.server";
+import { getClientEnv, getServerEnv } from "./lib/env-variables.server";
+
+
+
 
 export const links: LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -27,9 +33,21 @@ export const links: LinksFunction = () => [
 
 
 export const loader = async (args: LoaderFunctionArgs) => {
-  const clientEnv = getClientEnv();
-  return json({ clientEnv });
+
+
+  return rootAuthLoader(args, ({ request }) => {
+    const clientEnv = getClientEnv();
+
+    return ({ clientEnv });
+  })
+
 };
+
+
+export const meta: MetaFunction<typeof loader> = ({ data }) => [
+
+  { title: data?.clientEnv.title },
+];
 
 
 
@@ -51,9 +69,11 @@ export function Layout({ children }: { children: React.ReactNode }) {
   );
 }
 
-export default function App() {
+function App() {
   return <Outlet />;
 }
+
+export default ClerkApp(App);
 
 
 export function ErrorBoundary() {

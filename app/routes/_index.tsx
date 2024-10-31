@@ -10,9 +10,9 @@ export const loader = async (args: LoaderFunctionArgs) => {
 
 
 
-export const meta: MetaFunction = () => {
+export const meta: MetaFunction<typeof loader> = ({ data }) => {
   return [
-    { title: "New Remix App" },
+    { title: "redirecting..." },
     { name: "description", content: "Welcome to Remix!" },
   ];
 };

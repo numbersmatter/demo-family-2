@@ -6,7 +6,10 @@ const envSchema = z.object({
   SIGN_IN_PATH: z.string(),
   SIGN_UP_PATH: z.string(),
   SERVICE_ACCOUNT: z.string(),
+  CLERK_PUBLISHABLE_KEY: z.string().min(1),
+  CLERK_SECRET_KEY: z.string().min(1),
   FIREBASE_APP_NAME: z.string().default("default"),
+  APP_TITLE: z.string().default("Remix App"),
 });
 
 export const initEnvVariables = () => {
@@ -25,9 +28,9 @@ export const getServerEnv = () => initEnvVariables();
 
 // manunally add client env variables
 export const getClientEnv = () => {
-  const serverEnv = getServerEnv();
+  const {APP_TITLE} = getServerEnv();
 
-  return {};
+  return {title: APP_TITLE};
 };
 
 export type CLIENT_ENV = ReturnType<typeof getClientEnv>;
