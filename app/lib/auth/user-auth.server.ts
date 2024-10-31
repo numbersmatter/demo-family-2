@@ -6,6 +6,7 @@ import {
 import { getServerEnv } from "../env-variables.server";
 import { getUserDetails } from "./testing-user.server";
 import { checkRegistrationStatus } from "../business-logic/check-registration-status.server";
+import { getClerkAuth } from "./clerk-auth.server";
 
 const { SIGN_IN_PATH } = getServerEnv();
 
@@ -26,7 +27,8 @@ const checkAuth = async (args: LoaderFunctionArgs) => {
 };
 
 const requireAuth = async (args: LoaderFunctionArgs) => {
-  const {userId, email} = await getUserDetails(args);
+  // const {userId, email} = await getUserDetails(args);
+  const { userId, email } = await getClerkAuth(args);
 
   if(!userId){
     throw redirect(SIGN_IN_PATH);
