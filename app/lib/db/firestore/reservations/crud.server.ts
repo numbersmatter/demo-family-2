@@ -98,7 +98,7 @@ export const reservationsDb = () => {
     lname: string;
     email: string;
     phone: string;
-    time: string;
+    time: number;
   }) => {
     const reservationDocRef = makeReservationCollection.doc();
     const confirmCode = makeConfirmationCode(4);

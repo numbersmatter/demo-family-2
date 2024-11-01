@@ -1,4 +1,4 @@
-import { Form, useLoaderData, Link } from "@remix-run/react";
+import { Form, useLoaderData, Link, useNavigation } from "@remix-run/react";
 import {
   Card,
   CardContent,
@@ -21,6 +21,9 @@ export default function SubmitCard() {
     redirectLinks,
     applied
   } = useLoaderData<typeof loader>();
+
+  const naviation = useNavigation();
+  const isSubmitting = naviation.state !== "idle";
 
 
   const english = {
@@ -84,7 +87,7 @@ export default function SubmitCard() {
           success && !applied &&
           <Form method="post" >
             <input type="hidden" name="intent" value="submitApplication" />
-            <Button type="submit">
+            <Button type="submit" disabled={isSubmitting}>
               Submit
             </Button>
           </Form>

@@ -71,7 +71,7 @@ export const applicationsDb = () => {
   const create = async ({
     data,
   }: {
-    data: Omit<ApplicationDb, "createdDate">;
+    data: Omit<ApplicationDb, "createdDate" | "updatedDate">;
   }) => {
     const docRef = collection.doc();
 

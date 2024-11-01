@@ -3,6 +3,7 @@ import { handleAuth } from './data/auth.server';
 import { mutations } from './data/mutations.server';
 import { getPageData } from './data/data-fetchers.server';
 import AdultsCard from './components/adults-card';
+import { useLoaderData } from '@remix-run/react';
 
 export const loader = async (args: LoaderFunctionArgs) => {
   const { userId } = await handleAuth(args);
@@ -19,9 +20,11 @@ export const action = async (args: ActionFunctionArgs) => {
 };
 
 export default function Route() {
+  const data = useLoaderData<typeof loader>();
   return (
     <>
       <AdultsCard />
+      <pre>{JSON.stringify(data, null, 2)}</pre>
 
     </>
   )

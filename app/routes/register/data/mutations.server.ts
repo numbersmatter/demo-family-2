@@ -2,8 +2,8 @@ import { json, redirect } from "@remix-run/node";
 import { db } from "~/lib/db/db.server";
 import { AddressSchema, AddStudentSchema } from "./schemas";
 import { getPrimaryContact } from "./data-fetchers.server";
-import { ApplicationStatus } from "~/lib/firebase/firestore/applications/application-types";
 import { getActiveSemester } from "~/lib/business-logic/active-semester.server";
+import { ApplicationStatus } from "~/lib/db/firestore/applications/application-types";
 
 // export const submitApplicationOg = async ({
 //   primaryContact,
@@ -95,7 +95,7 @@ const submitApplication = async ({ userId }: { userId: string }) => {
       students,
       minors: userProfileDoc.minors,
       userId: userId,
-      adults: userProfileDoc.household_adults,
+      household_adults: userProfileDoc.household_adults,
       primaryContact,
     },
   });

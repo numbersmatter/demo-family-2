@@ -7,7 +7,7 @@ import { Minus, Plus } from "lucide-react";
 
 export default function AdultsCard() {
   const loaderData = useLoaderData<typeof loader>();
-  const [count, setCount] = useState(loaderData.adults)
+  const [count, setCount] = useState(loaderData.adults);
   const increaseAdults = () => setCount(count + 1)
   const decreaseAdults = () => setCount(count - 1)
 
@@ -20,6 +20,7 @@ export default function AdultsCard() {
     adults: "Adults in Household",
     drawerTitle: "Set Number of Adults",
     cancel: "Cancel",
+    noAdults: "There must be atleast one adult in the household.",
   }
 
   const spanish = {
@@ -31,9 +32,12 @@ export default function AdultsCard() {
     decrease: "Disminuir",
     increase: "Aumentar",
     cancel: "Cancelar",
+    noAdults: "Debe haber al menos un adulto en la casa.",
   }
 
   const lang = loaderData.language === "es" ? spanish : english
+
+  const noAdults = count < 1;
 
   return (
     <Card>
@@ -79,20 +83,19 @@ export default function AdultsCard() {
           <div className="mt-3 h-[120px]">
           </div>
         </div>
+        <div className="text-sm text-red-500 font-bold">
+          {noAdults && lang.noAdults}
+        </div>
       </CardContent>
       <CardFooter className="flex flex-col justify-between gap-6 md:flex-row md:gap-8 ">
         <Form method="post" className="w-full md:w-auto" >
           <input type="hidden" name="type" value="updateAdults" />
           <input type="hidden" name="adults" value={count} />
-          <Button variant={"default"} className="w-full">
+          <Button variant={"default"} className="w-full" disabled={noAdults}>
             {lang.button}
           </Button>
         </Form>
-        <Link to={"/register"} className="w-full md:w-auto">
-          <Button variant="outline" className="w-full">
-            Continue
-          </Button>
-        </Link>
+
       </CardFooter>
     </Card>
   )

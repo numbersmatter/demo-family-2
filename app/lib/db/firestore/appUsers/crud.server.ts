@@ -74,7 +74,7 @@ export const appUserDb = () => {
         state: "",
         zip: "",
       },
-      household_adults: 0,
+      household_adults: 1,
       createdDate: FieldValue.serverTimestamp(),
       updatedDate: FieldValue.serverTimestamp(),
     };

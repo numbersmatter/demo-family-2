@@ -1,11 +1,12 @@
-import { db } from "~/lib/db/db.server";
+import { redirect } from '@remix-run/node';
+import { db } from '~/lib/db/db.server';
 
-const getUserProfile = async (userId: string) => {
-  const profileDoc = await db.users().read({ id: userId });
+const getPageData = async ({ userId }: { userId: string }) => {
+  const userProfile = await db.users().read({id: userId});
 
-  return profileDoc;
+  const language = userProfile?.language || "en";
+
+  return { language };
 };
 
-export const dataFetchers = {
-  getUserProfile,
-};
+export { getPageData };

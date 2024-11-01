@@ -1,36 +1,9 @@
 import { parseWithZod } from "@conform-to/zod";
+import { AuthStates } from "~/lib/auth/user-auth.server";
 import { SetLanguageSchema } from "./schemas";
 import { json, redirect } from "@remix-run/node";
 import { db } from "~/lib/db/db.server";
-import { AuthStates } from "~/lib/business-logic/auth-state.server";
 
-const updateLanguagePreference = async ({
-  userId,
-  language,
-}: {
-  userId: string;
-  language: string;
-}) => {
-  return await db
-    .users()
-    .update({ id: userId, updateData: { language: language } });
-};
-const createUserProfileWithLanguagePreference = async ({
-  userId,
-  language,
-  email,
-}: {
-  userId: string;
-  language: "en" | "es";
-  email: string;
-}) => {
-  const profileData = {
-    userId: userId,
-    language: language,
-    email: email,
-  };
-  return await db.users().create(profileData);
-};
 
 const setLanguagePreference = async ({
   formData,
@@ -44,17 +17,28 @@ const setLanguagePreference = async ({
     return json(submission.reply(), { status: 400 });
   }
 
+  const language = submission.value.language;
+  const userId = submission.value.userId;
+  const email = submission.value.email;
+
   // check if user has a profile doc
-  const userProfileDoc = await db.users().read({ id: submission.value.userId });
+  const userProfileDoc = await db.users().read({ id:userId });
 
   if (!userProfileDoc) {
-    const write = await createUserProfileWithLanguagePreference(
-      submission.value
-    );
+    
+    const profileData = {
+      userId,
+      language,
+      email,
+    };
+    await db.users().create(profileData);
     return json({ ...submission.reply(), message: "User profile created." });
   }
 
-  await updateLanguagePreference(submission.value);
+  await db
+    .users()
+    .update({ id: userId, updateData: { language } });
+  
   if (authState === "registered") {
     return redirect("/home");
   }

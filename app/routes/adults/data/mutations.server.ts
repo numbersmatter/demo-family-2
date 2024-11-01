@@ -1,6 +1,6 @@
 import { parseWithZod } from "@conform-to/zod";
 import { SetAdultsSchema } from "./schemas";
-import { json } from "@remix-run/node";
+import { json, redirect } from "@remix-run/node";
 import { db } from "~/lib/db/db.server";
 
 const setAdults = async ({ formData }: { formData: FormData }) => {
@@ -16,10 +16,7 @@ const setAdults = async ({ formData }: { formData: FormData }) => {
     .users()
     .update({ id: userId, updateData: { household_adults: adults } });
 
-  return json({
-    ...submission.reply(),
-    message: "Number of Adults updated.",
-  });
+  return redirect("/register")
 };
 
 export const mutations = { setAdults };

@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from 'zod';
 
 export const SetLanguageSchema = z.object({
   language: z.enum(["en", "es"]),

@@ -12,10 +12,8 @@ import { loader } from "../route";
 
 
 export default function SelectLanguageCard() {
-  const { userProfile } = useLoaderData<typeof loader>();
+  const { language } = useLoaderData<typeof loader>();
 
-  const hasProfile = userProfile !== null;
-  const language = userProfile?.language || "en";
 
   return <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
     <Card className="">
@@ -39,13 +37,7 @@ export default function SelectLanguageCard() {
         </Form>
       </CardContent>
       <CardFooter className="flex justify-end">
-        <Link to="/onboarding">
-          <Button variant={"default"} className="bg-blue-500 text-white">
-            <span className="text-3xl  ">
-              {language === "en" ? "Continue" : "Continuar"}
-            </span>
-          </Button>
-        </Link>
+
       </CardFooter>
 
     </Card>

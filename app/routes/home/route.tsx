@@ -13,8 +13,10 @@ export const loader = async (args: LoaderFunctionArgs) => {
 };
 
 export const action = async (args: ActionFunctionArgs) => {
-  handleAuth(args);
-  return null;
+  const { userId } = await handleAuth(args);
+  const formData = await args.request.formData();
+  return await mutations.requestReservation({ formData, userId });
+
 };
 
 export default function Route() {
