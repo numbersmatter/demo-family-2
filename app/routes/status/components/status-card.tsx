@@ -4,18 +4,18 @@ import { loader } from "../route";
 import { Button } from "~/components/ui/button";
 
 export default function StatusCard() {
-  const { language, applicationDate, user, applicationStatus } = useLoaderData<typeof loader>();
+  const { language, applicationDate, user, applicationStatus, userInfo } = useLoaderData<typeof loader>();
 
   const english = {
     title: "Applied",
-    description: `Hello ${user.fname ?? "user"}, your application has been submitted. You will receive an email with your application status.`,
+    description: `Hello ${userInfo.fname ?? "user"}, your application has been submitted. You will receive an email with your application status.`,
     applicationInfo: `Application was submitted on ${applicationDate}`,
 
   }
 
   const spanish = {
     title: "Aplicación enviada",
-    description: `Hola ${user.fname ?? "usuario"}, tu aplicación ha sido enviada. Recibirás un correo electrónico con el estado de tu aplicación.`,
+    description: `Hola ${userInfo.fname ?? "usuario"}, tu aplicación ha sido enviada. Recibirás un correo electrónico con el estado de tu aplicación.`,
     applicationInfo: `La aplicación fue enviada el ${applicationDate}`,
   }
 

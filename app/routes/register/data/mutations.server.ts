@@ -85,6 +85,8 @@ const submitApplication = async ({ userId }: { userId: string }) => {
     throw redirect("/register");
   }
 
+  userProfileDoc.address
+
   const primaryContact = await getPrimaryContact({ userId });
 
   const applicationId = await db.applications().create({

@@ -28,7 +28,7 @@ const checkAuth = async (args: LoaderFunctionArgs) => {
 
 const requireAuth = async (args: LoaderFunctionArgs) => {
   // const {userId, email} = await getUserDetails(args);
-  const { userId, email } = await getClerkAuth(args);
+  const { userId, email, phone, fname, lname } = await getClerkAuth(args);
 
   if(!userId){
     throw redirect(SIGN_IN_PATH);
@@ -42,6 +42,9 @@ const requireAuth = async (args: LoaderFunctionArgs) => {
     userId,
     email,    
     authState,
+    phone,
+    fname,
+    lname,
   };
 };
 

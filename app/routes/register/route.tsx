@@ -13,7 +13,8 @@ export const loader = async (args: LoaderFunctionArgs) => {
 };
 
 export const action = async (args: ActionFunctionArgs) => {
-  let { userId } = await handleAuth(args);
+  let { userId, email, authState } = await handleAuth(args);
+
 
   return await mutations.submitApplication({ userId });
 };

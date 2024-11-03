@@ -20,12 +20,13 @@ export default function AdultsCard() {
     adults: "Adults in Household",
     drawerTitle: "Set Number of Adults",
     cancel: "Cancel",
-    noAdults: "There must be atleast one adult in the household.",
+    noAdults: "There must be at least one adult in the household.",
+    helperText: " Please have at least one student in the household."
   }
 
   const spanish = {
     title: "Adultos en la casa",
-    description: "Incluir solo no estudiantes mayores de 18",
+    description: "Incluir solo los estudiantes mayores de 18",
     adults: "Adultos en la casa",
     drawerTitle: "Establecer el número de adultos",
     button: "Actualizar",
@@ -33,6 +34,7 @@ export default function AdultsCard() {
     increase: "Aumentar",
     cancel: "Cancelar",
     noAdults: "Debe haber al menos un adulto en la casa.",
+    helperText: "Por favor tenga al menos un estudiante en la casa."
   }
 
   const lang = loaderData.language === "es" ? spanish : english

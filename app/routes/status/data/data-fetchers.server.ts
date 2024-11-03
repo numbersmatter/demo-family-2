@@ -23,7 +23,14 @@ const getApplicateData = async ({ userId }: { userId: string }) => {
   };
 };
 
-const getPageData = async ({ userId }: { userId: string }) => {
+interface UserInfo {
+  fname: string;
+  lname: string;
+  phone: string;
+  email: string;
+}
+
+const getPageData = async ({ userId, userInfo }: { userId: string, userInfo: UserInfo }) => {
   const userProfileDoc = await db.users().read({ id: userId });
 
   if (!userProfileDoc) {
@@ -38,7 +45,7 @@ const getPageData = async ({ userId }: { userId: string }) => {
     userId,
   });
 
-  return { address, language, applicationDate, user, applicationStatus };
+  return { address, language, applicationDate, user, applicationStatus, userInfo };
 };
 
 export { getPageData };
