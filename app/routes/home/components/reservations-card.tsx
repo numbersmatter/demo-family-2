@@ -7,11 +7,8 @@ import {
   CardHeader,
   CardTitle,
 } from "~/components/ui/card"
-
-
 import { loader } from "../route"
 import { ColumnDef } from "@tanstack/react-table"
-import { DataTable } from "~/components/ui/data-table"
 import ReservationsList from "./reservations-list"
 
 

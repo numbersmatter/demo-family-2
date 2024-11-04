@@ -14,6 +14,9 @@ import { ClerkApp } from "@clerk/remix";
 
 import "./tailwind.css";
 import { getClientEnv, getServerEnv } from "./lib/env-variables.server";
+import { SidebarInset, SidebarProvider, SidebarTrigger } from "./components/ui/sidebar";
+import { FamilySidebar } from "./components/standardized/family-app-sidebar";
+import { Separator } from "./components/ui/separator";
 
 
 
@@ -69,8 +72,30 @@ export function Layout({ children }: { children: React.ReactNode }) {
   );
 }
 
+function PageHeader() {
+  return (
+    <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
+      <SidebarTrigger className="-ml-1" />
+      <Separator orientation="vertical" className="mr-2 h-4" />
+      <h3>
+        Food Pantry App
+      </h3>
+    </header>
+  )
+
+
+}
+
 function App() {
-  return <Outlet />;
+  return <>
+    <SidebarProvider>
+      <FamilySidebar />
+      <SidebarInset>
+        <PageHeader />
+        <Outlet />
+      </SidebarInset>
+    </SidebarProvider>
+  </>
 }
 
 export default ClerkApp(App);
