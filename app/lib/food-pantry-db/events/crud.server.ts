@@ -31,14 +31,39 @@ const firestoreConverter: EventConverter = {
     };
   },
   fromFirestore: (snapshot: QueryDocumentSnapshot<m.EventDbModel>) => {
+    const eventDate = snapshot.data().eventTimestamp 
+    ? snapshot.data().eventTimestamp.toDate() 
+    // @ts-expect-error some times eventTimestamp does not exist
+    : snapshot.data().eventDate 
+    // @ts-expect-error some times eventDate is not a timestamp
+    ? snapshot.data().eventDate.toDate()
+    : new Date();
+
+    const createdDate = snapshot.data().createdTimestamp 
+    ? snapshot.data().createdTimestamp.toDate() 
+    // @ts-expect-error some times createdTimestamp does not exist
+    : snapshot.data().createdDate 
+    // @ts-expect-error some times createdDate is not a timestamp
+    ? snapshot.data().createdDate.toDate()
+    : new Date();
+
+    const updatedDate = snapshot.data().updatedTimestamp 
+    ? snapshot.data().updatedTimestamp.toDate() 
+    // @ts-expect-error some times updatedTimestamp does not exist
+    : snapshot.data().updatedDate 
+    // @ts-expect-error some times updatedDate is not a timestamp
+    ? snapshot.data().updatedDate.toDate()
+    : new Date();
+
+
     return {
       id: snapshot.id,
       name: snapshot.data().name,
       type: snapshot.data().type,
       stage: snapshot.data().stage,
-      eventDate: snapshot.data().eventTimestamp.toDate(),
-      createdDate: snapshot.data().createdTimestamp.toDate(),
-      updatedDate: snapshot.data().updatedTimestamp.toDate(),
+      eventDate,
+      createdDate,
+      updatedDate,
       timeSlots: Object.entries(snapshot.data().timeSlots)
         .map(([id, label]) => ({ id: Number(id), label }))
         .sort((a, b) => a.id - b.id),
