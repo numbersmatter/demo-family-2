@@ -1,19 +1,9 @@
 import { Timestamp } from "firebase-admin/firestore";
+import { Address, Minor, PrimaryContact, Student } from "../common-types";
 
 
-export interface Student {
-  id: string;
-  fname: string;
-  lname: string;
-  school: "tps" | "lde" | "tms" | "ths";
-}
 
-export interface Minor {
-  id: string;
-  fname: string;
-  lname: string;
-  birthyear: number;
-}
+
 
 export type ApplicationStatus =
   | "in-progress"
@@ -22,24 +12,13 @@ export type ApplicationStatus =
   | "declined"
   | "error";
 
-interface Application {
+interface ApplicationAppDb {
   id: string;
   userId: string;
   semesterId: string;
   status: ApplicationStatus;
-  primaryContact: {
-    fname: string;
-    lname: string;
-    email: string;
-    phone: string;
-  };
-  address: {
-    street: string;
-    unit: string;
-    city: string;
-    state: string;
-    zip: string;
-  };
+  primaryContact:PrimaryContact
+  address: Address;
   household_adults: number;
   students: Student[];
   minors: Minor[];
@@ -48,9 +27,11 @@ interface Application {
 }
 
 interface ApplicationDb
-  extends Omit<Application, "id" | "createdDate" | "updatedDate"> {
-  updatedDate: Timestamp;
-  createdDate: Timestamp;
+  extends Omit<ApplicationAppDb, "id" | "createdDate" | "updatedDate"> {
+  updatedTimestamp: Timestamp;
+  createdTimestamp: Timestamp;
 }
 
-export type { Application, ApplicationDb };
+interface ApplicationCreate  extends Omit<ApplicationAppDb, "id" | "createdDate" | "updatedDate"> {}
+
+export type { ApplicationAppDb, ApplicationDb, ApplicationCreate };

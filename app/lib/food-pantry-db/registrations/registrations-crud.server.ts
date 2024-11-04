@@ -1,33 +1,30 @@
-import { FieldValue,  FirestoreDataConverter,  QueryDocumentSnapshot,  Timestamp } from "firebase-admin/firestore";
-import {
-  Registration,
-  RegistrationCreate,
-  RegistrationDb,
-} from "./registrations-types";
+import { DocumentData, FieldValue,  FirestoreDataConverter,  QueryDocumentSnapshot,  Timestamp } from "firebase-admin/firestore";
+import * as m from "./registrations-types";
 import { firestoreDb } from "~/lib/firebase/firestore.server";
+import { R } from "node_modules/vite/dist/node/types.d-aGj9QkWt";
 
+interface RegConverter extends FirestoreDataConverter<m.RegistrationApp, m.RegistrationDb> {}
 
-const firestoreConverter: FirestoreDataConverter<Registration> = {
-  toFirestore: (registration: Registration) => {
+const registrationCollectionPath = `/registrations`;
+
+const firestoreConverter: RegConverter = {
+  toFirestore: (registration: m.RegistrationApp) => {
     return {
       id: registration.id,
       userId: registration.userId,
       semesterId: registration.semesterId,
       status: registration.status,
-      createdDate: registration.createdDate,
-      updatedDate: registration.updatedDate,
-      primaryContact: {
-        fname: registration.primaryContact.fname,
-        lname: registration.primaryContact.lname,
-        email: registration.primaryContact.email,
-        phone: registration.primaryContact.phone,
-      },
-      adults: registration.household_adults,
+      address: registration.address,
+      createdTimestamp: Timestamp.fromDate(registration.createdDate),
+      updatedTimestamp: Timestamp.fromDate(registration.updatedDate),
+      applicationId: registration.applicationId,
+      household_adults: registration.household_adults,
       students: registration.students,
       minors: registration.minors,
+      primaryContact: registration.primaryContact,
     };
   },
-  fromFirestore: (snapshot: QueryDocumentSnapshot<RegistrationDb>) => {
+  fromFirestore: (snapshot: QueryDocumentSnapshot<m.RegistrationDb>) => {
     return {
       id: snapshot.id,
       userId: snapshot.data().userId,
@@ -35,26 +32,22 @@ const firestoreConverter: FirestoreDataConverter<Registration> = {
       household_adults: snapshot.data().household_adults,
       semesterId: snapshot.data().semesterId,
       status: snapshot.data().status,
-      primaryContact: {
-        fname: snapshot.data().primaryContact?.fname,
-        lname: snapshot.data().primaryContact?.lname,
-        email: snapshot.data().primaryContact?.email,
-        phone: snapshot.data().primaryContact?.phone,
-      },
-      createdDate: snapshot.data().createdDate.toDate(),
-      updatedDate: snapshot.data().updatedDate.toDate(),
+      primaryContact: snapshot.data().primaryContact,
+      createdDate: snapshot.data().createdTimestamp.toDate(),
+      updatedDate: snapshot.data().updatedTimestamp.toDate(),
       students: snapshot.data().students,
       minors: snapshot.data().minors,
+      address:  snapshot.data().address,
     };
   },
 }
 
 export const registrationsDb = () => {
   const firestore = firestoreDb();
-  const readCollection = firestore.collection(`registrations`)
+  const readCollection = firestore.collection(registrationCollectionPath)
   .withConverter(firestoreConverter);
 
-  const writeCollection = firestore.collection(`registrations`);
+  const writeCollection = firestore.collection(registrationCollectionPath);
 
 
   const read = async (id: string) => {
@@ -66,14 +59,14 @@ export const registrationsDb = () => {
     return doc;
   };
 
-  const create = async (data: RegistrationCreate) => {
+  const create = async (data: m.RegistrationCreate) => {
     const docRef = writeCollection.doc();
 
     const writeData = {
       ...data,
       status: "registered",
-      createdDate: FieldValue.serverTimestamp(),
-      updatedDate: FieldValue.serverTimestamp(),
+      createdTimestamp: FieldValue.serverTimestamp(),
+      updatedTimestamp: FieldValue.serverTimestamp(),
     };
 
     await docRef.set(writeData);
@@ -86,7 +79,7 @@ export const registrationsDb = () => {
     data,
   }: {
     id: string;
-    data: Partial<RegistrationDb>;
+    data: DocumentData;
   }) => {
     const docRef = writeCollection.doc(id);
     const updateData = {
@@ -123,5 +116,6 @@ export const registrationsDb = () => {
     create,
     update,
     checkRegistration,
+    collection: readCollection,
   };
 };

@@ -1,30 +1,13 @@
 import { Timestamp } from "firebase-admin/firestore";
+import { Address, Minor, PrimaryContact, Student } from "../common-types";
 
-interface PrimaryContact {
-  fname: string;
-  lname: string;
-  email: string;
-  phone: string;
-}
 
-interface Student {
-  id: string;
-  fname: string;
-  lname: string;
-  school: "tps" | "lde" | "tms" | "ths";
-}
-interface Minor {
-  id: string;
-  fname: string;
-  lname: string;
-  birthyear: number;
-}
-
-interface Registration {
+interface RegistrationApp {
   id: string;
   userId: string;
   semesterId: string;
   applicationId: string;
+  address: Address; 
   status: "registered" | "error" | "removed";
   primaryContact: PrimaryContact;
   household_adults: number;
@@ -34,18 +17,16 @@ interface Registration {
   updatedDate: Date;
 }
 
-interface RegistrationDb extends Omit<Registration, "id" | "createdDate" | "updatedDate"> {
-  updatedDate: Timestamp;
-  createdDate: Timestamp;
+interface RegistrationDb extends Omit<RegistrationApp, "id" | "createdDate" | "updatedDate"> {
+  updatedTimestamp: Timestamp;
+  createdTimestamp: Timestamp;
 }
 
 interface RegistrationCreate
   extends Omit<RegistrationDb, "createdDate" | "updatedDate"> {}
 
 export type {
-  Registration,
+  RegistrationApp,
   RegistrationDb,
   RegistrationCreate,
-  Student,
-  Minor,
 };

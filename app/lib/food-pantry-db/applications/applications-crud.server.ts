@@ -1,37 +1,36 @@
 import {
+  DocumentData,
   FieldValue,
   FirestoreDataConverter,
-  getFirestore,
   QueryDocumentSnapshot,
   Timestamp,
 } from "firebase-admin/firestore";
-import { Application, ApplicationDb } from "./application-types";
-import { initFirebase } from "~/lib/firebase/firebase.server";
 import * as m from "./application-types";
 import { firestoreDb } from "~/lib/firebase/firestore.server";
+import { Student, Minor } from "../common-types";
 
-const firestoreConverter: FirestoreDataConverter<m.Application> = {
-  toFirestore: (application: m.Application) => {
+type AppConverter = FirestoreDataConverter<m.ApplicationAppDb, m.ApplicationDb>;
+
+const applicationCollectionPath = `/applications`;
+
+const firestoreConverter: AppConverter = {
+  toFirestore: (application: m.ApplicationAppDb) => {
     return {
       id: application.id,
       userId: application.userId,
       semesterId: application.semesterId,
       status: application.status,
-      createdDate: application.createdDate,
-      updatedDate: application.updatedDate,
+      createdTimestamp: Timestamp.fromDate(application.createdDate),
+      updatedTimestamp: Timestamp.fromDate(application.updatedDate),
       address: application.address,
       household_adults: application.household_adults,
       minors: application.minors,
       students: application.students,
-      primaryContact: {
-        fname: application.primaryContact.fname,
-        lname: application.primaryContact.lname,
-        email: application.primaryContact.email,
-        phone: application.primaryContact.phone,
-      },
+      primaryContact: application.primaryContact,
     };
   },
   fromFirestore: (snapshot: QueryDocumentSnapshot<m.ApplicationDb>) => {
+   
     return {
       id: snapshot.id,
       userId: snapshot.data().userId,
@@ -43,8 +42,8 @@ const firestoreConverter: FirestoreDataConverter<m.Application> = {
         email: snapshot.data().primaryContact?.email,
         phone: snapshot.data().primaryContact?.phone,
       },
-      createdDate: snapshot.data().createdDate.toDate(),
-      updatedDate: snapshot.data().updatedDate.toDate(),
+      createdDate: snapshot.data().createdTimestamp.toDate(),
+      updatedDate: snapshot.data().updatedTimestamp.toDate(),
       address: snapshot.data().address,
       household_adults: snapshot.data().household_adults,
       minors: snapshot.data().minors,
@@ -55,7 +54,7 @@ const firestoreConverter: FirestoreDataConverter<m.Application> = {
 
 export const applicationsDb = () => {
   const firestore = firestoreDb();
-  const collection = firestore.collection(`applications`);
+  const collection = firestore.collection(applicationCollectionPath);
   const collectionRead = collection.withConverter(firestoreConverter);
 
   const read = async ({ id }: { id: string }) => {
@@ -71,14 +70,14 @@ export const applicationsDb = () => {
   const create = async ({
     data,
   }: {
-    data: Omit<ApplicationDb, "createdDate" | "updatedDate">;
+    data: m.ApplicationCreate
   }) => {
     const docRef = collection.doc();
 
     const writeData = {
       ...data,
-      createdDate: FieldValue.serverTimestamp(),
-      updatedDate: FieldValue.serverTimestamp(),
+      createdTimestamp: FieldValue.serverTimestamp(),
+      updatedTimestamp: FieldValue.serverTimestamp(),
     };
 
     await docRef.set(writeData);
@@ -90,7 +89,7 @@ export const applicationsDb = () => {
     data,
   }: {
     id: string;
-    data: Partial<Application>;
+    data: DocumentData;
   }) => {
     const docRef = collection.doc(id);
     const updateData = {
@@ -106,7 +105,7 @@ export const applicationsDb = () => {
     data,
   }: {
     appUserId: string;
-    data: m.Student;
+    data: Student;
   }) => {
     const docRef = collection.doc(appUserId);
 
@@ -147,7 +146,7 @@ export const applicationsDb = () => {
     data,
   }: {
     appUserId: string;
-    data: m.Minor;
+    data: Minor;
   }) => {
     const docRef = collection.doc(appUserId);
 
@@ -241,5 +240,6 @@ export const applicationsDb = () => {
     checkApplication,
     getAllForReviewBySemester,
     getAllBySemester,
+    collection: collectionRead,
   };
 };
