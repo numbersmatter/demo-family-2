@@ -1,7 +1,6 @@
 import { DocumentData, FieldValue,  FirestoreDataConverter,  QueryDocumentSnapshot,  Timestamp } from "firebase-admin/firestore";
 import * as m from "./registrations-types";
 import { firestoreDb } from "~/lib/firebase/firestore.server";
-import { R } from "node_modules/vite/dist/node/types.d-aGj9QkWt";
 
 interface RegConverter extends FirestoreDataConverter<m.RegistrationApp, m.RegistrationDb> {}
 
@@ -25,6 +24,22 @@ const firestoreConverter: RegConverter = {
     };
   },
   fromFirestore: (snapshot: QueryDocumentSnapshot<m.RegistrationDb>) => {
+    const createdDate = snapshot.data().createdTimestamp
+    ? snapshot.data().createdTimestamp.toDate()
+    // @ts-expect-error createdTimestamp may not exist
+    : snapshot.data().createdDate
+    // @ts-expect-error createdDate may not exist
+    ? snapshot.data().createdDate.toDate()
+    : new Date();
+
+    const updatedDate = snapshot.data().updatedTimestamp
+    ? snapshot.data().updatedTimestamp.toDate()
+    // @ts-expect-error updatedTimestamp may not exist
+    : snapshot.data().updatedDate
+    // @ts-expect-error updatedDate may not exist
+    ? snapshot.data().updatedDate.toDate()
+    : new Date();
+
     return {
       id: snapshot.id,
       userId: snapshot.data().userId,
@@ -33,8 +48,8 @@ const firestoreConverter: RegConverter = {
       semesterId: snapshot.data().semesterId,
       status: snapshot.data().status,
       primaryContact: snapshot.data().primaryContact,
-      createdDate: snapshot.data().createdTimestamp.toDate(),
-      updatedDate: snapshot.data().updatedTimestamp.toDate(),
+      createdDate,
+      updatedDate,
       students: snapshot.data().students,
       minors: snapshot.data().minors,
       address:  snapshot.data().address,

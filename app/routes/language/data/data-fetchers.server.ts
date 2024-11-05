@@ -1,8 +1,8 @@
 import { redirect } from '@remix-run/node';
-import { db } from '~/lib/db/db.server';
+import foodpantryDb from '~/lib/food-pantry-db';
 
 const getPageData = async ({ userId }: { userId: string }) => {
-  const userProfile = await db.users().read({id: userId});
+  const userProfile = await foodpantryDb.users().read({id: userId});
 
   const language = userProfile?.language || "en";
 

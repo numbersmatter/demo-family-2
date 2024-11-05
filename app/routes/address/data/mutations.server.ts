@@ -1,9 +1,9 @@
 import { parseWithZod } from "@conform-to/zod";
 import { AddressSchema } from "./schemas";
 import { json, redirect } from "@remix-run/node";
-import { db } from "~/lib/db/db.server";
 import { Address } from "~/lib/db/firestore/appUsers/app-user-types";
 import { AuthStates } from "~/lib/auth/user-auth.server";
+import foodpantryDb from "~/lib/food-pantry-db";
 
 
 interface AddressUpdate extends Address {
@@ -17,7 +17,7 @@ const addressWrite = async ({
 }) => {
   const { userId, ...address } = addressUpdate;
 
-  return await db.users().update({
+  return await foodpantryDb.users().update({
     id: userId,
     updateData: { address: address },
   });

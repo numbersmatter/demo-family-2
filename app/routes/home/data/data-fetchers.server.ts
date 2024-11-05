@@ -1,8 +1,8 @@
 import { redirect } from "@remix-run/node";
-import { db } from "~/lib/db/db.server";
+import foodpantryDb from "~/lib/food-pantry-db";
 
 const getPageData = async ({ userId }: { userId: string }) => {
-  const userProfileDoc = await db.users().read({ id: userId });
+  const userProfileDoc = await foodpantryDb.users().read({ id: userId });
 
   if (!userProfileDoc) {
     throw redirect("/language");
@@ -12,7 +12,7 @@ const getPageData = async ({ userId }: { userId: string }) => {
 
 
   // Query for events in an open state
-  const eventDocs = await db
+  const eventDocs = await foodpantryDb
     .events()
     .listByStages({ stages: ["open-for-requests", "open-for-pickups"] });
 
@@ -34,7 +34,7 @@ const getPageData = async ({ userId }: { userId: string }) => {
 
   // Query for reservations the user has made for events in an open state
   // To do this we need to pass a list of event ids and userId
-  const reservationsDocs = await db.reservations().checkUserReservations({
+  const reservationsDocs = await foodpantryDb.reservations().checkUserReservations({
     userId,
     eventIdArray: openEventsDocs.map((event) => event.id),
   });

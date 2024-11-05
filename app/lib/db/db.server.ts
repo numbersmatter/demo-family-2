@@ -5,7 +5,7 @@ import { registrationsDb } from "./firestore/registrations/registrations-crud.se
 import { reservationsDb } from "./firestore/reservations/crud.server";
 import { testCollectionDb } from "./firestore/TestCollection/crud.server";
 
-export const db = {
+export const dbOld = {
   test_collection: testCollectionDb,
   users: appUserDb,
   applications: applicationsDb,

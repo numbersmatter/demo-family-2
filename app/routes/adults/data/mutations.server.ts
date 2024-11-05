@@ -1,7 +1,7 @@
 import { parseWithZod } from "@conform-to/zod";
 import { SetAdultsSchema } from "./schemas";
 import { json, redirect } from "@remix-run/node";
-import { db } from "~/lib/db/db.server";
+import foodpantryDb from "~/lib/food-pantry-db";
 
 const setAdults = async ({ formData }: { formData: FormData }) => {
   const userId = formData.get("userId") as string;
@@ -12,7 +12,7 @@ const setAdults = async ({ formData }: { formData: FormData }) => {
 
   const { adults } = submission.value;
 
-  await db
+  await foodpantryDb
     .users()
     .update({ id: userId, updateData: { household_adults: adults } });
 

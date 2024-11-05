@@ -1,9 +1,9 @@
 import { redirect } from "@remix-run/node";
 import { getActiveSemester } from "~/lib/business-logic/active-semester.server";
-import { db } from "~/lib/db/db.server";
+import foodpantryDb from "~/lib/food-pantry-db";
 
 const getPageData = async ({ userId }: { userId: string }) => {
-  const userProfileDoc = await db.users().read({ id: userId });
+  const userProfileDoc = await foodpantryDb.users().read({ id: userId });
 
   const redirectLinks = {
     address: "/address",
@@ -16,7 +16,7 @@ const getPageData = async ({ userId }: { userId: string }) => {
   const { semesterId } = await getActiveSemester();
 
   // check if application already exists
-  const applicationDoc = await db
+  const applicationDoc = await foodpantryDb
     .applications()
     .checkApplication({ userId, semesterId });
 

@@ -1,10 +1,10 @@
 import { redirect } from "@remix-run/node";
 import { getActiveSemester } from "~/lib/business-logic/active-semester.server";
-import { db } from "~/lib/db/db.server";
+import foodpantryDb from "~/lib/food-pantry-db";
 
 const getApplicateData = async ({ userId }: { userId: string }) => {
   const { semesterId } = await getActiveSemester();
-  const applicationDoc = await db
+  const applicationDoc = await foodpantryDb
     .applications()
     .checkApplication({ userId, semesterId });
 
@@ -31,7 +31,7 @@ interface UserInfo {
 }
 
 const getPageData = async ({ userId, userInfo }: { userId: string, userInfo: UserInfo }) => {
-  const userProfileDoc = await db.users().read({ id: userId });
+  const userProfileDoc = await foodpantryDb.users().read({ id: userId });
 
   if (!userProfileDoc) {
     throw redirect("/language");

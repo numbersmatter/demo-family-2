@@ -1,7 +1,7 @@
 import { parseWithZod } from "@conform-to/zod";
 import { RequestReservationSchema } from "./schemas";
 import { json, redirect } from "@remix-run/node";
-import { db } from "~/lib/db/db.server";
+import foodpantryDb from "~/lib/food-pantry-db";
 
 const requestReservation = async ({
   formData,
@@ -18,7 +18,7 @@ const requestReservation = async ({
     return json(submission.reply(), { status: 400 });
   }
 
-  const registrationDoc = await db
+  const registrationDoc = await foodpantryDb
     .registrations()
     .checkRegistration({ userId, semesterId: submission.value.semesterId });
 
@@ -36,7 +36,7 @@ const requestReservation = async ({
     time: submission.value.time,
   };
 
-  await db.reservations().makeReservation(reservationData);
+  await foodpantryDb.reservations().makeReservation(reservationData);
 
   throw redirect("/home");
 };

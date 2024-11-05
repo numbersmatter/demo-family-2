@@ -1,7 +1,7 @@
 import { parseWithZod } from "@conform-to/zod";
 import { json } from "@remix-run/node";
 import { AddStudentSchema, RemoveStudentSchema } from "./schemas";
-import { db } from "~/lib/db/db.server";
+import foodpantryDb from "~/lib/food-pantry-db";
 
 const addStudent = async ({ formData }: { formData: FormData }) => {
   const userId = formData.get("userId") as string;
@@ -17,7 +17,7 @@ const addStudent = async ({ formData }: { formData: FormData }) => {
     school,
   };
 
-  await db.users().addStudent({ userId, student });
+  await foodpantryDb.users().addStudent({ userId, student });
 
   return json({
     ...submission.reply(),
@@ -34,7 +34,7 @@ const removeStudent = async ({ formData }: { formData: FormData }) => {
 
   const { studentId } = submission.value;
 
-  await db.users().removeStudent({ userId, studentId });
+  await foodpantryDb.users().removeStudent({ userId, studentId });
 
   return json({
     ...submission.reply(),

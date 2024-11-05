@@ -2,7 +2,6 @@ import {
   DocumentData,
   FieldValue,
   FirestoreDataConverter,
-  getFirestore,
   QueryDocumentSnapshot,
   Timestamp,
 } from "firebase-admin/firestore";
@@ -74,12 +73,12 @@ const firestoreConverter: ReserveConverter = {
 export const reservationsDb = () => {
   const firestore = firestoreDb();
 
-  const collectionPath = `reservations`;
 
-  const makeReservationCollection = firestore.collection(collectionPath);
+  const makeReservationCollection = firestore
+  .collection(reservationCollectionPath);
 
   const readReservationCollection = firestore
-    .collection(collectionPath)
+    .collection(reservationCollectionPath)
     .withConverter(firestoreConverter);
 
   const read = async (id: string) => {

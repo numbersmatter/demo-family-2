@@ -1,7 +1,7 @@
 import { parseWithZod } from "@conform-to/zod";
 import { AddMinorSchema, RemoveMinorSchema } from "./schemas";
 import { json } from "@remix-run/node";
-import { db } from "~/lib/db/db.server";
+import foodpantryDb from "~/lib/food-pantry-db";
 
 const addMinor = async ({ formData }: { formData: FormData }) => {
   const userId = formData.get("userId") as string;
@@ -17,7 +17,7 @@ const addMinor = async ({ formData }: { formData: FormData }) => {
     birthyear,
   };
 
-  await db.users().addMinor({ userId, minor });
+  await foodpantryDb.users().addMinor({ userId, minor });
 
   return json({
     ...submission.reply(),
@@ -34,7 +34,7 @@ const removeMinor = async ({ formData }: { formData: FormData }) => {
 
   const { minorId } = submission.value;
 
-  await db.users().removeMinor({ userId, minorId });
+  await foodpantryDb.users().removeMinor({ userId, minorId });
 
   return json({
     ...submission.reply(),

@@ -2,7 +2,7 @@ import { parseWithZod } from "@conform-to/zod";
 import { AuthStates } from "~/lib/auth/user-auth.server";
 import { SetLanguageSchema } from "./schemas";
 import { json, redirect } from "@remix-run/node";
-import { db } from "~/lib/db/db.server";
+import foodpantryDb from "~/lib/food-pantry-db";
 
 
 const setLanguagePreference = async ({
@@ -22,7 +22,7 @@ const setLanguagePreference = async ({
   const email = submission.value.email;
 
   // check if user has a profile doc
-  const userProfileDoc = await db.users().read({ id:userId });
+  const userProfileDoc = await foodpantryDb.users().read({ id:userId });
 
   if (!userProfileDoc) {
     
@@ -31,11 +31,11 @@ const setLanguagePreference = async ({
       language,
       email,
     };
-    await db.users().create(profileData);
+    await foodpantryDb.users().create(profileData);
     return json({ ...submission.reply(), message: "User profile created." });
   }
 
-  await db
+  await foodpantryDb
     .users()
     .update({ id: userId, updateData: { language } });
   

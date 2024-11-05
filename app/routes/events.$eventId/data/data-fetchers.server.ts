@@ -1,5 +1,4 @@
 import { json, redirect } from '@remix-run/node';
-import { db } from '~/lib/db/db.server';
 import foodpantryDb from '~/lib/food-pantry-db';
 
 // get data on the event

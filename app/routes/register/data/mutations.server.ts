@@ -1,62 +1,13 @@
 import { json, redirect } from "@remix-run/node";
-import { db } from "~/lib/db/db.server";
 import { AddressSchema, AddStudentSchema } from "./schemas";
 import { getPrimaryContact } from "./data-fetchers.server";
 import { getActiveSemester } from "~/lib/business-logic/active-semester.server";
 import { ApplicationStatus } from "~/lib/db/firestore/applications/application-types";
+import foodpantryDb from "~/lib/food-pantry-db";
 
-// export const submitApplicationOg = async ({
-//   primaryContact,
-//   appUserId,
-// }: {
-//   appUserId: string;
-//   primaryContact: {
-//     fname: string;
-//     lname: string;
-//     email: string;
-//     phone: string;
-//   };
-// }) => {
-//   const { addressCheck, studentsCheck, adults, minors } = await reviewData(
-//     appUserId
-//   );
-
-//   if (addressCheck.success === false) {
-//     return json({ status: "error", message: "address-check-failed" });
-//   }
-
-//   if (studentsCheck.success === false) {
-//     return json({ status: "error", message: "student-check-failed" });
-//   }
-
-//   // const activeSemester = await db.organization.activeSemester();
-//   // if (!activeSemester) {
-//   //   throw new Error("No active semester");
-//   // }
-
-//   const { semesterId } = await getActiveSemester();
-
-//   const applicationData = {
-//     status: "pending" as ApplicationStatus,
-//     semesterId,
-//     address: addressCheck.address,
-//     students: studentsCheck.students,
-//     minors,
-//     userId: appUserId,
-//     adults,
-//     primaryContact,
-//   };
-
-//   const applicationWrite = await db.applications({ semesterId }).create({
-//     appUserId,
-//     data: applicationData,
-//   });
-
-//   return json(applicationWrite);
-// };
 
 const submitApplication = async ({ userId }: { userId: string }) => {
-  const userProfileDoc = await db.users().read({ id: userId });
+  const userProfileDoc = await foodpantryDb.users().read({ id: userId });
   if (!userProfileDoc) {
     throw redirect("/language");
   }
@@ -65,7 +16,7 @@ const submitApplication = async ({ userId }: { userId: string }) => {
   const { semesterId } = await getActiveSemester();
 
   // check if application already exists
-  const applicationDoc = await db
+  const applicationDoc = await foodpantryDb
     .applications()
     .checkApplication({ userId, semesterId });
 
@@ -89,7 +40,7 @@ const submitApplication = async ({ userId }: { userId: string }) => {
 
   const primaryContact = await getPrimaryContact({ userId });
 
-  const applicationId = await db.applications().create({
+  const applicationId = await foodpantryDb.applications().create({
     data: {
       status: "pending" as ApplicationStatus,
       semesterId,

@@ -1,7 +1,5 @@
 import { redirect } from '@remix-run/node';
 import { FieldPath, FieldValue } from 'firebase-admin/firestore';
-import { getActiveSemester } from '~/lib/business-logic/active-semester.server';
-import { db } from '~/lib/db/db.server';
 import foodpantryDb from '~/lib/food-pantry-db';
 
 
