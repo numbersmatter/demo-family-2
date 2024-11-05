@@ -30,11 +30,29 @@ const firestoreConverter: UserConverter = {
     };
   },
   fromFirestore: (snapshot: QueryDocumentSnapshot<m.UserDbModel>) => {
+    const createdDate = snapshot.data().createdTimestamp 
+    ? snapshot.data().createdTimestamp.toDate()
+    // @ts-expect-error createdTimestamp may not exist
+    : snapshot.data().createdDate
+    // @ts-expect-error createdDate may not exist
+    ? snapshot.data().createdDate.toDate()
+    : new Date();
+
+
+    const updatedDate = snapshot.data().updatedTimestamp 
+    ? snapshot.data().updatedTimestamp.toDate()
+    // @ts-expect-error updatedTimestamp may not exist
+    : snapshot.data().updatedDate
+    // @ts-expect-error updatedDate may not exist
+    ? snapshot.data().updatedDate.toDate()
+    : new Date();
+
+
     return {
       id: snapshot.id,
       email: snapshot.data().email,
-      createdDate: snapshot.data().createdTimestamp.toDate(),
-      updatedDate: snapshot.data().updatedTimestamp.toDate(),
+      createdDate,
+      updatedDate,
       language: snapshot.data().language,
       address: snapshot.data().address,
       household_adults: snapshot.data().household_adults,

@@ -1,5 +1,5 @@
 import { redirect } from "@remix-run/node";
-import { db } from "~/lib/db/db.server";
+import foodpantryDb from "~/lib/food-pantry-db";
 
 const getPageData = async ({
   userId,
@@ -8,7 +8,7 @@ const getPageData = async ({
   userId: string;
   reservationId: string;
 }) => {
-  const userProfileDoc = await db.users().read({ id: userId });
+  const userProfileDoc = await foodpantryDb.users().read({ id: userId });
 
   if (!userProfileDoc) {
     throw redirect("/language");
@@ -16,7 +16,7 @@ const getPageData = async ({
 
   const language = userProfileDoc.language;
 
-  const reservationDoc = await db.reservations().read(reservationId);
+  const reservationDoc = await foodpantryDb.reservations().read(reservationId);
 
   if (!reservationDoc) {
     throw redirect("/home");
@@ -27,7 +27,7 @@ const getPageData = async ({
   if (reservationUserId !== userId) {
     throw redirect("/home");
   }
-  const eventDoc = await db.events().read({ eventId: reservationDoc.eventId });
+  const eventDoc = await foodpantryDb.events().read({ eventId: reservationDoc.eventId });
 
   if (!eventDoc) {
     throw redirect("/home");
