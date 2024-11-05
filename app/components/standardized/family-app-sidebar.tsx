@@ -1,7 +1,9 @@
+import { SignedIn, UserButton } from "@clerk/remix"
 import { ListOrderedIcon, Home, Inbox } from "lucide-react"
 import {
   Sidebar,
   SidebarContent,
+  SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
@@ -49,6 +51,8 @@ export function FamilySidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
+      <SidebarFooter>
+      </SidebarFooter>
     </Sidebar>
   )
 }

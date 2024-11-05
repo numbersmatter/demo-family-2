@@ -10,7 +10,7 @@ import {
 } from "@remix-run/react";
 import type { LinksFunction } from "@remix-run/node";
 import { rootAuthLoader } from "@clerk/remix/ssr.server";
-import { ClerkApp } from "@clerk/remix";
+import { ClerkApp, SignedIn, SignedOut, UserButton } from "@clerk/remix";
 
 import "./tailwind.css";
 import { getClientEnv, getServerEnv } from "./lib/env-variables.server";
@@ -80,6 +80,8 @@ function PageHeader() {
       <h3>
         Food Pantry App
       </h3>
+      <Separator orientation="vertical" className="mr-2 h-4" />
+      <UserButton />
     </header>
   )
 
@@ -88,13 +90,18 @@ function PageHeader() {
 
 function App() {
   return <>
-    <SidebarProvider>
-      <FamilySidebar />
-      <SidebarInset>
-        <PageHeader />
-        <Outlet />
-      </SidebarInset>
-    </SidebarProvider>
+    <SignedIn>
+      <SidebarProvider>
+        <FamilySidebar />
+        <SidebarInset>
+          <PageHeader />
+          <Outlet />
+        </SidebarInset>
+      </SidebarProvider>
+    </SignedIn>
+    <SignedOut>
+      <Outlet />
+    </SignedOut>
   </>
 }
 
