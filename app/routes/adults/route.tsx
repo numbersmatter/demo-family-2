@@ -24,8 +24,6 @@ export default function Route() {
   return (
     <>
       <AdultsCard />
-      <pre>{JSON.stringify(data, null, 2)}</pre>
-
     </>
   )
 }

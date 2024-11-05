@@ -11,6 +11,11 @@ export const handleAuth = async (args: LoaderFunctionArgs) => {
     email: data.email,
   }
 
+  if (data.authState === "registered") {
+    throw redirect("/home");
+  }
+    
+
 
   return {
     userId: data.userId,

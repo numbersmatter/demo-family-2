@@ -2,11 +2,17 @@ import { json, redirect } from "@remix-run/node";
 import { AddressSchema, AddStudentSchema } from "./schemas";
 import { getPrimaryContact } from "./data-fetchers.server";
 import { getActiveSemester } from "~/lib/business-logic/active-semester.server";
-import { ApplicationStatus } from "~/lib/db/firestore/applications/application-types";
 import foodpantryDb from "~/lib/food-pantry-db";
+import { ApplicationStatus } from "~/lib/food-pantry-db/applications/application-types";
+import { PrimaryContact } from "~/lib/food-pantry-db/common-types";
 
 
-const submitApplication = async ({ userId }: { userId: string }) => {
+const submitApplication = async ({ 
+  userId, primaryContact 
+}: { 
+  userId: string 
+  primaryContact: PrimaryContact
+}) => {
   const userProfileDoc = await foodpantryDb.users().read({ id: userId });
   if (!userProfileDoc) {
     throw redirect("/language");
@@ -36,9 +42,7 @@ const submitApplication = async ({ userId }: { userId: string }) => {
     throw redirect("/register");
   }
 
-  userProfileDoc.address
-
-  const primaryContact = await getPrimaryContact({ userId });
+  
 
   const applicationId = await foodpantryDb.applications().create({
     data: {

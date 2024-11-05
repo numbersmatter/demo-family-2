@@ -5,6 +5,7 @@ import { getPageData } from './data/data-fetchers.server';
 import AddressCheckCard from './components/address-check-card';
 import StudentCheckCard from './components/student-check-card';
 import SubmitCard from './components/submit-card';
+import { PrimaryContact } from '~/lib/food-pantry-db/common-types';
 
 export const loader = async (args: LoaderFunctionArgs) => {
   const { userId } = await handleAuth(args);
@@ -13,10 +14,20 @@ export const loader = async (args: LoaderFunctionArgs) => {
 };
 
 export const action = async (args: ActionFunctionArgs) => {
-  let { userId, email, authState } = await handleAuth(args);
+  const data = await handleAuth(args);
+
+  const primaryContact: PrimaryContact = {
+    fname: data.fname,
+    lname: data.lname,
+    email: data.email,
+    phone: data.phone,
+  }
 
 
-  return await mutations.submitApplication({ userId });
+  return await mutations.submitApplication({
+    userId: data.userId,
+    primaryContact,
+  });
 };
 
 export default function Route() {

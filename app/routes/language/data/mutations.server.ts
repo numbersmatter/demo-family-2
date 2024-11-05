@@ -3,6 +3,7 @@ import { AuthStates } from "~/lib/auth/user-auth.server";
 import { SetLanguageSchema } from "./schemas";
 import { json, redirect } from "@remix-run/node";
 import foodpantryDb from "~/lib/food-pantry-db";
+import { getActiveSemester } from "~/lib/business-logic/active-semester.server";
 
 
 const setLanguagePreference = async ({
@@ -25,7 +26,6 @@ const setLanguagePreference = async ({
   const userProfileDoc = await foodpantryDb.users().read({ id:userId });
 
   if (!userProfileDoc) {
-    
     const profileData = {
       userId,
       language,
@@ -39,9 +39,17 @@ const setLanguagePreference = async ({
     .users()
     .update({ id: userId, updateData: { language } });
   
-  if (authState === "registered") {
-    return redirect("/home");
+  //  check if user has applied for a registration
+  const { semesterId } = await getActiveSemester();
+  const applicationDoc = await foodpantryDb
+    .applications()
+    .checkApplication({ userId, semesterId });
+
+
+  if (applicationDoc) {
+    return redirect("/status");
   }
+  
   return redirect("/address");
 };
 
