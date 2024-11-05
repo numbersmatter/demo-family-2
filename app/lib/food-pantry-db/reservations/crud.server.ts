@@ -41,11 +41,27 @@ const firestoreConverter: ReserveConverter = {
     };
   },
   fromFirestore: (snapshot: QueryDocumentSnapshot<m.ReservationDbModel>) => {
+    const createdDate = snapshot.data().createdTimestamp 
+    ? snapshot.data().createdTimestamp.toDate() 
+    // @ts-expect-error some times createdTimestamp does not exist
+    : snapshot.data().createdDate 
+    // @ts-expect-error some times createdDate is not a timestamp
+    ? snapshot.data().createdDate.toDate()
+    : new Date();
+
+    const updatedDate = snapshot.data().updatedTimestamp 
+    ? snapshot.data().updatedTimestamp.toDate() 
+    // @ts-expect-error some times updatedTimestamp does not exist
+    : snapshot.data().updatedDate 
+    // @ts-expect-error some times updatedDate is not a timestamp
+    ? snapshot.data().updatedDate.toDate()
+    : new Date();
+
     return {
       id: snapshot.id,
       userId: snapshot.data().userId,
-      createdDate: snapshot.data().createdTimestamp.toDate(),
-      updatedDate: snapshot.data().updatedTimestamp.toDate(),
+      createdDate,
+      updatedDate,
       eventId: snapshot.data().eventId,
       status: snapshot.data().status,
       time: snapshot.data().time,

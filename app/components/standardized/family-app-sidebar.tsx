@@ -1,4 +1,4 @@
-import { Calendar, Home, Inbox } from "lucide-react"
+import { ListOrderedIcon, Home, Inbox } from "lucide-react"
 import {
   Sidebar,
   SidebarContent,
@@ -16,6 +16,11 @@ const items = [
     url: "/home",
     icon: Home,
   },
+  {
+    title: "Reservations",
+    url: "/reservations",
+    icon: ListOrderedIcon,
+  }
 
 ]
 
