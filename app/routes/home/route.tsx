@@ -21,9 +21,9 @@ export const action = async (args: ActionFunctionArgs) => {
 
 export default function Route() {
   return (
-    <>
+    <div className="mx-auto max-w-7xl flex flex-col gap-6 py-6  sm:px-6 lg:px-8 ">
       <OpenEvents />
       <Reservations />
-    </>
+    </div>
   )
 }

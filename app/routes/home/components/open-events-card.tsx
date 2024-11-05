@@ -1,5 +1,5 @@
-import { useLoaderData } from "@remix-run/react"
-import { CarIcon } from "lucide-react"
+import { useLoaderData, Link } from "@remix-run/react"
+import { CarIcon, } from "lucide-react"
 import { Badge } from "~/components/ui/badge"
 import {
   Card,
@@ -20,6 +20,7 @@ import {
 } from "~/components/ui/table"
 import { loader } from "../route"
 import { RequestDialog } from "./request-dialog"
+import { Button } from "~/components/ui/button"
 // import { useUser } from "@clerk/remix"
 
 interface TimeSlots {
@@ -42,6 +43,12 @@ export default function OpenEvents() {
   const { openEvents } = useLoaderData<typeof loader>()
   // const totalOpportunities = opportunities.length;
 
+  const events = openEvents.map((event) => {
+    return {
+      ...event,
+      eventDate: new Date(event.eventDate).toLocaleDateString(),
+    }
+  })
 
 
 
@@ -60,43 +67,39 @@ export default function OpenEvents() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="hidden w-[100px] sm:table-cell">
+                {/* <TableHead className="hidden w-[100px] sm:table-cell">
                   <span className="sr-only">Icon</span>
-                </TableHead>
+                </TableHead> */}
                 <TableHead>Name</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead className="hidden md:table-cell">Date</TableHead>
+                <TableHead>Date</TableHead>
                 <TableHead>
-                  <span className="sr-only">Apply or Code</span>
+                  <span className="sr-only">Tracking Code</span>
                 </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {openEvents.map((event) => {
+              {events.map((event) => {
                 return (
                   <TableRow key={event.id}>
-                    <TableCell className="hidden sm:table-cell">
+                    {/* <TableCell className="hidden sm:table-cell">
                       <CarIcon
                         className="aspect-square rounded-md object-cover"
                         height="64"
                         width="64"
                       />
-                    </TableCell>
+                    </TableCell> */}
                     <TableCell className="font-medium">
                       {event.name}
                     </TableCell>
                     <TableCell>
-                      <Badge variant="outline">{event.type}</Badge>
-                    </TableCell>
-                    <TableCell className="hidden md:table-cell">
-                      {event.eventDate}
+                      <Badge variant="outline">{event.eventDate}</Badge>
                     </TableCell>
                     <TableCell>
-                      <RequestDialog
-                        timeSlots={event.timeSlots}
-                        eventId={event.id}
-                        semesterId={event.semesterId}
-                      />
+                      <Link to={`/events/${event.id}`} className="text-primary">
+                        <Button variant="outline">
+                          Request
+                        </Button>
+                      </Link>
                     </TableCell>
                   </TableRow>
                 )

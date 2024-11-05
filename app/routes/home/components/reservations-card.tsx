@@ -69,7 +69,7 @@ export default function Reservations() {
 
 
   return (
-    <div className="mx-auto max-w-7xl py-4 sm:px-6 lg:px-8 ">
+    <div className="mx-auto max-w-7xl sm:px-6 lg:px-8 ">
       {/* Content goes here */}
 
       <Card className={""}>
