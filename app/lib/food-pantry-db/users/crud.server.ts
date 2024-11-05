@@ -5,6 +5,7 @@ import {
   getFirestore,
   QueryDocumentSnapshot,
   Timestamp,
+  WithFieldValue,
 } from "firebase-admin/firestore";
 import * as m from "./user-types";
 import { firestoreDb } from "~/lib/firebase/firestore.server";
@@ -14,13 +15,13 @@ import { firestoreDb } from "~/lib/firebase/firestore.server";
 
 type UserConverter = FirestoreDataConverter<m.UserAppModel, m.UserDbModel>;
 
-const userCollectionPath = `/appUsers`;
+const userCollectionPath = `/users`;
 
 const firestoreConverter: UserConverter = {
-  toFirestore: (appUser: m.UserAppModel) => {
+  toFirestore: (appUser: WithFieldValue <m.UserAppModel>) => {
     return {
       email: appUser.email,
-      createdTimestamp: Timestamp.fromDate(appUser.createdDate),
+      createdTimestamp: FieldValue.serverTimestamp(),
       updatedTimestamp: FieldValue.serverTimestamp(),
       language: appUser.language,
       address: appUser.address,
