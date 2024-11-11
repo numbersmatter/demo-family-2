@@ -21,7 +21,7 @@ export default function ReservationsList() {
                 </Link>
               </p>
               <p className="mt-1 flex text-xs leading-5 text-gray-500">
-                {new Date(r.date).toLocaleDateString()}
+                {new Date(r.date).toLocaleDateString()} {r.time_slot}
               </p>
             </div>
           </div>

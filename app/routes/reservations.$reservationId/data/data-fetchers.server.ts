@@ -1,5 +1,6 @@
 import { redirect } from "@remix-run/node";
 import foodpantryDb from "~/lib/food-pantry-db";
+import { convertTo12Hour } from "~/lib/utils";
 
 const getPageData = async ({
   userId,
@@ -17,9 +18,23 @@ const getPageData = async ({
   const language = userProfileDoc.language;
 
   const reservationDoc = await foodpantryDb.reservations().read(reservationId);
-
   if (!reservationDoc) {
     throw redirect("/home");
+  }
+
+  const docTime = reservationDoc.time.toString();
+
+  const hour = docTime.substring(0, 2);
+  const minute = docTime.substring(2, 4);
+
+  const timeSlot = hour+":"+minute;
+
+  const time_slot = convertTo12Hour(timeSlot);
+
+
+  const reservation = {
+    ...reservationDoc,
+    time_slot,
   }
 
   const reservationUserId = reservationDoc.userId;
@@ -33,7 +48,7 @@ const getPageData = async ({
     throw redirect("/home");
   }
 
-  return { language, reservation: reservationDoc, event: eventDoc };
+  return { language, reservation, event: eventDoc };
 };
 
 export { getPageData };

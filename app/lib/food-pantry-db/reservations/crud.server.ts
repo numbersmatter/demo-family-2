@@ -204,6 +204,9 @@ export const reservationsDb = () => {
     userId: string;
     eventIdArray: string[];
   }) => {
+    if(eventIdArray.length === 0){
+      return [];
+    }
     const querySnapshot = await readReservationCollection
       .where("userId", "==", userId)
       .where("eventId", "in", eventIdArray)

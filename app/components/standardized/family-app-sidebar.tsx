@@ -1,4 +1,4 @@
-import { SignedIn, UserButton } from "@clerk/remix"
+import { SignedIn, SignOutButton, UserButton } from "@clerk/remix"
 import { ListOrderedIcon, Home, Inbox } from "lucide-react"
 import {
   Sidebar,
@@ -11,6 +11,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem
 } from "~/components/ui/sidebar"
+import { Button } from "../ui/button"
 
 const items = [
   {
@@ -52,6 +53,11 @@ export function FamilySidebar() {
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
+        <SignOutButton>
+          <Button variant="destructive">
+            Sign Out
+          </Button>
+        </SignOutButton>
       </SidebarFooter>
     </Sidebar>
   )

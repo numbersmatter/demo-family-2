@@ -1,5 +1,6 @@
 import { redirect } from "@remix-run/node";
 import foodpantryDb from "~/lib/food-pantry-db";
+import { convertTo12Hour } from "~/lib/utils";
 
 const getPageData = async ({ userId }: { userId: string }) => {
   const userProfileDoc = await foodpantryDb.users().read({ id: userId });
@@ -18,6 +19,7 @@ const getPageData = async ({ userId }: { userId: string }) => {
 
 
 
+
   //  Add time slots to each event
   const openEventsDocs = eventDocs.map((eventDoc) => {
     const timeSlots = [
@@ -31,6 +33,7 @@ const getPageData = async ({ userId }: { userId: string }) => {
       timeSlots,
     };
   });
+
 
   // Query for reservations the user has made for events in an open state
   // To do this we need to pass a list of event ids and userId
@@ -47,6 +50,15 @@ const getPageData = async ({ userId }: { userId: string }) => {
     if (event === undefined) {
       throw new Error("Event not found");
     }
+
+    const docTime = reservationDoc.time.toString();
+    const hour = docTime.substring(0, 2);
+    const minute = docTime.substring(2, 4);
+    const timeSlot = hour+":"+minute;
+    const time_slot = convertTo12Hour(timeSlot);
+
+
+
     return {
       eventName: event.name,
       id: reservationDoc.id,
@@ -55,6 +67,7 @@ const getPageData = async ({ userId }: { userId: string }) => {
       status: reservationDoc.status,
       time: reservationDoc.time,
       confirm: reservationDoc.confirm,
+      time_slot,
     };
   });
 

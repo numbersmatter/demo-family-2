@@ -39,11 +39,11 @@ export default function ReservationCard() {
           <p className="text-3xl text-accent-foreground font-extrabold">
             {reservation.confirm}
           </p>
-          <h5>
-            Status
-          </h5>
-          <p className="text-lg text-accent-foreground font-extrabold">
-            {reservation.status}
+          <p className="text-lg text-accent-foreground font-medium">
+            Status: {reservation.status}
+          </p>
+          <p >
+            Time Slot: {reservation.time_slot}
           </p>
         </div>
       </CardContent>
