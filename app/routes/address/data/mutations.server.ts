@@ -1,9 +1,9 @@
 import { parseWithZod } from "@conform-to/zod";
 import { AddressSchema } from "./schemas";
 import { json, redirect } from "@remix-run/node";
-import { Address } from "~/lib/db/firestore/appUsers/app-user-types";
 import { AuthStates } from "~/lib/auth/user-auth.server";
 import foodpantryDb from "~/lib/food-pantry-db";
+import { Address } from "~/lib/food-pantry-db/common-types";
 
 
 interface AddressUpdate extends Address {
