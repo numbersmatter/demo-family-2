@@ -7,6 +7,7 @@ The home page will be the primary interaction the staff has with families.
 As in the family can see events, request a food box. They can also see the confirmation code for the food box they requested.
 
 ## Auth
+These functions will be handled by the auth.server.ts file.
 All users are either "logged-out", "authenticated" or "registered".
 
 Registered users have been authenticated and have been approved by staff for the semester.
@@ -16,6 +17,8 @@ This page is only for registered users. Authenticated users will be redirected t
 Logged out users will be redirected to the sign-in route.
 
 ## Page Data
+These functions will be handled by the data-fetchers.server.ts file.
+
 This page will need:
 
 #### Events
